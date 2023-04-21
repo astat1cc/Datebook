@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface DateListRepository {
 
-    suspend fun fetchDateList(): Flow<List<DateListItemDomain>>
+    suspend fun fetchDateList(date: String): Flow<List<DateListItemDomain>>
 }

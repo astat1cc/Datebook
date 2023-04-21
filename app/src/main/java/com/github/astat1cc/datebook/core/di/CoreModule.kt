@@ -4,6 +4,7 @@ import androidx.room.Room
 import com.github.astat1cc.datebook.core.database.DatesDatabase
 import com.github.astat1cc.datebook.core.util.AppErrorHandler
 import com.github.astat1cc.datebook.core.util.AppResourceProvider
+import com.github.astat1cc.datebook.core.util.DateFormatUtil
 import com.github.astat1cc.datebook.core.util.DispatchersProvider
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -24,5 +25,8 @@ val coreModule = module {
     }
     single<AppErrorHandler> {
         AppErrorHandler.Impl(resources = get())
+    }
+    single<DateFormatUtil> {
+        DateFormatUtil.Impl()
     }
 }

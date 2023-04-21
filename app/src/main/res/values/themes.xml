@@ -4,4 +4,16 @@
     <style name="Theme.Datebook" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/purple_700</item>
     </style>
+
+    <style name="Widget.CalendarView.Custom" parent="android:Widget.CalendarView">
+        <item name="android:focusedMonthDateColor">@color/blue</item>
+        <item name="android:weekNumberColor">@color/blue</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:colorPrimary">@color/blue</item>
+        <item name="android:showWeekNumber">false</item>
+        <item name="android:dateTextAppearance">@style/TextAppearance.AppCompat.Body1</item>
+<!--        <item name="android:weekDayTextAppearance">@color/blue</item>-->
+<!--        <item name="android:dateTextAppearance">@style/TextAppearance.Medium</item>-->
+    </style>
 </resources>

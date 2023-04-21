@@ -18,25 +18,56 @@ class DateListViewModel(
     private val errorHandler: AppErrorHandler
 ) : ViewModel() {
 
-    private val _dateList = MutableStateFlow<UiState<List<DateListItemUi>>>(UiState.Loading())
-    val dateList: StateFlow<UiState<List<DateListItemUi>>> = _dateList.asStateFlow()
+    private val _dateMap =
+        MutableStateFlow<UiState<Map<String, List<DateListItemUi>>>>(UiState.Loading())
+    val dateMap: StateFlow<UiState<Map<String, List<DateListItemUi>>>> = _dateMap.asStateFlow()
+
+    val hourList = listOf(
+        "00:00",
+        "01:00",
+        "02:00",
+        "03:00",
+        "04:00",
+        "05:00",
+        "06:00",
+        "07:00",
+        "08:00",
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+        "21:00",
+        "22:00",
+        "23:00",
+        "24:00"
+    )
 
     init {
         with(viewModelScope) {
             launch {
-                interactor.fetchDateList().collect { fetchResult ->
-                    _dateList.value = fetchResult.toUiState()
+                interactor.fetchDateList("").collect { fetchResult ->
+                    _dateMap.value = fetchResult.toUiState()
                 }
             }
         }
     }
 
-    private fun FetchResult<List<DateListItemDomain>>.toUiState(): UiState<List<DateListItemUi>> =
+    private fun FetchResult<Map<String, List<DateListItemDomain>>>.toUiState(): UiState<Map<String, List<DateListItemUi>>> =
         when (this) {
             is FetchResult.Success -> {
                 UiState.Success(
-                    data.map { dateDomain ->
-                        DateListItemUi.fromDomain(dateDomain)
+                    data.mapValues { entry ->
+                        entry.value.map { dateDomain ->
+                            DateListItemUi.fromDomain(dateDomain)
+                        }
                     }
                 )
             }
@@ -48,6 +79,10 @@ class DateListViewModel(
         }
 
     fun dateChanged(year: Int, month: Int, day: Int) {
+
+    }
+
+    fun createDate() {
 
     }
 }

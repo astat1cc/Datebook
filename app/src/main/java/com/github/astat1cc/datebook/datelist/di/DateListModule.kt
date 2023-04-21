@@ -17,7 +17,12 @@ val dateListModule = module {
         DateListRepositoryImpl(dao = get())
     }
     single<DateListInteractor> {
-        DateListInteractor.Impl(repository = get(), errorHandler = get(), dispatchers = get())
+        DateListInteractor.Impl(
+            repository = get(),
+            errorHandler = get(),
+            dispatchers = get(),
+            dateFormatUtil = get()
+        )
     }
     viewModel {
         DateListViewModel(interactor = get(), errorHandler = get())

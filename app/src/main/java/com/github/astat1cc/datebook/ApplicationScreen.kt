@@ -1,13 +1,10 @@
 package com.github.astat1cc.datebook
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.github.astat1cc.datebook.core.ui.colors.lightBackground
+import com.github.astat1cc.datebook.core.ui.colors.background
 import com.github.astat1cc.datebook.datelist.presentation.DateListScreen
 import com.github.astat1cc.datebook.navigation.NavigationTree
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -22,7 +19,7 @@ fun ApplicationScreen() {
 
     AnimatedNavHost(
         modifier = Modifier
-            .background(lightBackground),
+            .background(background),
         navController = navController,
         startDestination = NavigationTree.DateList.name
     ) {

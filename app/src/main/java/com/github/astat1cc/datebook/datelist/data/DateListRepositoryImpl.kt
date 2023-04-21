@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.map
 
 class DateListRepositoryImpl(private val dao: DateListDao) : DateListRepository {
 
-    override suspend fun fetchDateList(): Flow<List<DateListItemDomain>> =
+    override suspend fun fetchDateList(date: String): Flow<List<DateListItemDomain>> =
         dao.fetchDateList().map { dateListDb ->
             dateListDb.map { dateItemDb ->
                 dateItemDb.toListItemDomain()
