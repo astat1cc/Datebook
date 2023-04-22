@@ -25,7 +25,12 @@ val dateListModule = module {
         )
     }
     viewModel {
-        DateListViewModel(interactor = get(), errorHandler = get())
+        DateListViewModel(
+            interactor = get(),
+            errorHandler = get(),
+            dateFormatUtil = get(),
+            appResourceProvider = get()
+        )
     }
 }
 

@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Datebook</string>
     <string name="something_went_wrong">Something went wrong</string>
+    <string name="create_date">Create Date</string>
+    <string name="date_title">Date title</string>
+    <string name="date_description">Date description</string>
+    <string name="done">Done</string>
+    <string name="time">Time</string>
+    <string name="default_time">00:00</string>
 </resources>

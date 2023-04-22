@@ -1,5 +1,6 @@
 package com.github.astat1cc.datebook.datelist.presentation.models
 
+import com.github.astat1cc.datebook.core.util.DateFormatUtil
 import com.github.astat1cc.datebook.datelist.domain.models.DateListItemDomain
 
 data class DateListItemUi(
@@ -10,8 +11,8 @@ data class DateListItemUi(
 
     companion object {
 
-        fun fromDomain(date: DateListItemDomain) = with(date) {
-            DateListItemUi(id, dateStart, name)
+        fun fromDomain(date: DateListItemDomain, dateFormatUtil: DateFormatUtil) = with(date) {
+            DateListItemUi(id, dateFormatUtil.getDateWithTimeFrom(dateStart), name)
         }
     }
 }

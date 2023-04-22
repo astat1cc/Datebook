@@ -6,12 +6,11 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import com.github.astat1cc.datebook.core.ui.colors.greenDark
 import com.github.astat1cc.datebook.core.ui.colors.purple
-import com.github.astat1cc.datebook.core.ui.colors.blue
-import com.github.astat1cc.datebook.core.ui.colors.greenLight
+import com.github.astat1cc.datebook.core.ui.colors.green
 
 private val LightColorPalette = lightColors(
-    primary = greenLight,
-    primaryVariant = greenDark,
+    primary = greenDark,
+    primaryVariant = green,
     secondary = purple
 
     /* Other default colors to override
@@ -25,7 +24,7 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun DatebookTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun DatebookTheme(content: @Composable () -> Unit) {
     val colors = LightColorPalette
 
 

@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.astat1cc.datebook.core.ui.colors.green
 import com.github.astat1cc.datebook.core.ui.colors.greenDark
 
 @Composable
@@ -29,7 +30,7 @@ fun DateView(modifier: Modifier = Modifier, name: String, time: String) {
             Modifier
                 .width(8.dp)
                 .fillMaxHeight()
-                .background(greenDark)
+                .background(green)
         )
         Column(
             modifier = Modifier
@@ -39,7 +40,8 @@ fun DateView(modifier: Modifier = Modifier, name: String, time: String) {
             Text(
                 text = name,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                color = greenDark
             )
             Row(
                 modifier = Modifier.padding(top = 16.dp),
@@ -53,37 +55,10 @@ fun DateView(modifier: Modifier = Modifier, name: String, time: String) {
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
                     text = time,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    color = greenDark
                 )
             }
         }
-//        Column(
-//            modifier = Modifier
-//                .padding(start = 8.dp)
-//                .fillMaxWidth()
-//                .background(Color.White)
-//                .padding(8.dp)
-//        ) {
-//            Text(
-//                text = name,
-//                fontWeight = FontWeight.Bold,
-//                fontSize = 14.sp
-//            )
-//            Row(
-//                modifier = Modifier.padding(top = 16.dp),
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Icon(
-//                    modifier = Modifier.size(12.dp),
-//                    painter = painterResource(id = com.github.astat1cc.datebook.R.drawable.ic_clock),
-//                    contentDescription = null
-//                )
-//                Text(
-//                    modifier = Modifier.padding(start = 4.dp),
-//                    text = time,
-//                    fontSize = 12.sp
-//                )
-//            }
-//        }
     }
 }
