@@ -1,5 +1,6 @@
 package com.github.astat1cc.datebook.core.util
 
+import kotlinx.datetime.LocalDate
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -10,7 +11,7 @@ interface DateFormatUtil {
 
     fun getOnlyHourFrom(timestampMillis: Long): String
 
-    fun getDateFrom(year: Int, month: Int, day: Int): String
+    fun getDateFrom(year: Int, month: Int, day: Int): String // todo
 
     fun getDateWithTimeFrom(timestampMillis: Long): String
 
@@ -23,6 +24,10 @@ interface DateFormatUtil {
     fun getTimestampInMillisFrom(dateString: String, timeString: String): Long
 
     fun getTimestampInMillisOfTheDayAfter(chosenDateInMillis: Long): Long
+
+    fun getDateFrom(kalendarDate: LocalDate): String
+
+    fun getLocalDateFrom(dateString: String): LocalDate
 
     class Impl : DateFormatUtil {
 
@@ -45,6 +50,11 @@ interface DateFormatUtil {
             return formatter.format(Date(timestampMillis))
         }
 
+        override fun getDateFrom(kalendarDate: LocalDate): String {
+            val (year, month, day) = kalendarDate.toString().split("-")
+            return "$day.$month.$year"
+        }
+
         override fun getDateWithTimeFrom(timestampMillis: Long): String {
             val formatter: DateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
             return formatter.format(Date(timestampMillis))
@@ -62,6 +72,11 @@ interface DateFormatUtil {
 
         override fun getTimestampInMillisOfTheDayAfter(chosenDateInMillis: Long): Long =
             chosenDateInMillis + DAY_IN_MILLIS
+
+        override fun getLocalDateFrom(dateString: String): LocalDate {
+            val (day, month, year) = dateString.split(".").map { it.toInt()}
+            return LocalDate(year, month, day)
+        }
 
         companion object {
 

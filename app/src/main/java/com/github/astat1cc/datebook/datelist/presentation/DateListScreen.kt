@@ -1,6 +1,7 @@
 package com.github.astat1cc.datebook.datelist.presentation
 
 import android.app.TimePickerDialog
+import android.util.Log
 import android.widget.CalendarView
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -31,11 +32,21 @@ import com.github.astat1cc.datebook.R
 import com.github.astat1cc.datebook.core.models.ui.UiState
 import com.github.astat1cc.datebook.core.ui.colors.green
 import com.github.astat1cc.datebook.core.ui.colors.greenDark
+import com.github.astat1cc.datebook.core.ui.colors.greenLight
 import com.github.astat1cc.datebook.datelist.presentation.views.DateCreatingSheet
 import com.github.astat1cc.datebook.datelist.presentation.views.DateView
 import com.github.astat1cc.datebook.datelist.presentation.views.HourIntervalView
 import com.github.astat1cc.datebook.datelist.presentation.views.HourView
+import com.himanshoe.kalendar.Kalendar
+import com.himanshoe.kalendar.color.KalendarThemeColor
+import com.himanshoe.kalendar.component.day.config.KalendarDayColors
+import com.himanshoe.kalendar.component.header.config.KalendarHeaderConfig
+import com.himanshoe.kalendar.component.text.config.KalendarTextColor
+import com.himanshoe.kalendar.component.text.config.KalendarTextConfig
+import com.himanshoe.kalendar.component.text.config.KalendarTextSize
+import com.himanshoe.kalendar.model.KalendarType
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
@@ -48,6 +59,7 @@ fun DateListScreen(
     val dateMapState = viewModel.dateMap.collectAsState()
     val currentlyChosenDateState = viewModel.currentlyChosenDate.collectAsState()
     val currentlyChosenDateInMillisState = viewModel.currentlyChosenDateInMillis.collectAsState()
+    val currentlyChosenDateInLocalDate = viewModel.currentlyChosenDateInLocalDate.collectAsState()
     val newDateTitleState = viewModel.newDateTitle.collectAsState()
     val newDateDescriptionState = viewModel.newDateDescription.collectAsState()
     val newDatePickedTime = viewModel.newDatePickedTime.collectAsState()
@@ -127,99 +139,119 @@ fun DateListScreen(
             )
         }
     ) {
-        Box {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                item {
-                    AndroidView(
-                        modifier = Modifier
-//                            .padding(horizontal = 20.dp)
-                            .fillMaxWidth()
-//                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(Color.White),
-                        factory = {
-                            CalendarView(it)
-                        },
-                        update = { calendarView ->
-                            calendarView.date = currentlyChosenDateInMillisState.value
-                            calendarView.setOnDateChangeListener { _, year, month, day ->
-                                viewModel.dateChanged(year, month, day)
-                            }
-                        }
-                    )
-                }
-                item { Spacer(modifier = Modifier.height(32.dp)) }
-                when (dateMap) {
-                    is UiState.Loading -> {
-                        item {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(color = Color.White)
-                            }
-                        }
-                    }
-                    is UiState.Fail -> {}
-                    is UiState.Success -> {
-                        hourList.forEach { hour ->
-                            item(
-                                key = hour
-                            ) {
-                                HourIntervalView(
-                                    modifier = Modifier.animateItemPlacement(),
-                                    hour = hour
-                                )
-                            }
-                            items(
-                                items = dateMap.data[hour] ?: emptyList(),
-                                key = { date ->
-                                    date.id
-                                }) { date ->
-                                Row(
-                                    modifier = Modifier
-                                        .padding(
-                                            vertical = 12.dp,
-                                            horizontal = 32.dp
-                                        )
-                                        .animateItemPlacement()
+        Column(modifier = Modifier.fillMaxSize()) {
+            Kalendar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onCurrentDayClick = { date, _ ->
+                    viewModel.dateChanged(date.localDate)
+                },
+                takeMeToDate = currentlyChosenDateInLocalDate.value,
+                kalendarDayColors = KalendarDayColors(
+                    textColor = greenDark,
+                    selectedTextColor = Color.White
+                ),
+                kalendarThemeColor = KalendarThemeColor(
+                    backgroundColor = greenLight,
+                    dayBackgroundColor = greenDark,
+                    headerTextColor = greenDark
+                )
+            )
+            Box {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+//                item {
+
+//                    AndroidView(
+//                        modifier = Modifier
+////                            .padding(horizontal = 20.dp)
+//                            .fillMaxWidth()
+////                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
+//                            .clip(RoundedCornerShape(16.dp))
+//                            .background(Color.White),
+//                        factory = {
+//                            CalendarView(it)
+//                        },
+//                        update = { calendarView ->
+//                            calendarView.date = currentlyChosenDateInMillisState.value
+//                            calendarView.setOnDateChangeListener { _, year, month, day ->
+//                                viewModel.dateChanged(year, month, day)
+//                            }
+//                        }
+//                    )
+//                }
+                    item { Spacer(modifier = Modifier.height(32.dp)) }
+                    when (dateMap) {
+                        is UiState.Loading -> {
+                            item {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
                                 ) {
-                                    // invisible view to align DateView below the line
-                                    HourView(modifier = Modifier.alpha(0f), hour = hour)
-                                    // date
-                                    DateView(
-                                        modifier = Modifier
-                                            .padding(start = 24.dp),
-                                        name = date.name,
-                                        time = date.dateStart
+                                    CircularProgressIndicator(color = Color.White)
+                                }
+                            }
+                        }
+                        is UiState.Fail -> {}
+                        is UiState.Success -> {
+                            hourList.forEach { hour ->
+                                item(
+                                    key = hour
+                                ) {
+                                    HourIntervalView(
+                                        modifier = Modifier.animateItemPlacement(),
+                                        hour = hour
                                     )
+                                }
+                                items(
+                                    items = dateMap.data[hour] ?: emptyList(),
+                                    key = { date ->
+                                        date.id
+                                    }) { date ->
+                                    Row(
+                                        modifier = Modifier
+                                            .padding(
+                                                vertical = 12.dp,
+                                                horizontal = 32.dp
+                                            )
+                                            .animateItemPlacement()
+                                    ) {
+                                        // invisible view to align DateView below the line
+                                        HourView(modifier = Modifier.alpha(0f), hour = hour)
+                                        // date
+                                        DateView(
+                                            modifier = Modifier
+                                                .padding(start = 24.dp),
+                                            name = date.name,
+                                            time = date.dateStart
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 16.dp, end = 16.dp)
-                    .size(56.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable {
-                        coroutineScope.launch {
-                            modalSheetState.show()
+                Icon(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 16.dp, end = 16.dp)
+                        .size(56.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            coroutineScope.launch {
+                                modalSheetState.show()
+                            }
                         }
-                    }
-                    .background(green)
-                    .padding(16.dp),
-                painter = painterResource(id = R.drawable.ic_add),
-                contentDescription = null,
-                tint = greenDark
-            )
+                        .background(green)
+                        .padding(16.dp),
+                    painter = painterResource(id = R.drawable.ic_add),
+                    contentDescription = null,
+                    tint = greenDark
+                )
+            }
         }
     }
 }

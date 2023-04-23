@@ -81,6 +81,8 @@ dependencies {
     def nav_anim_version = "0.29.0-alpha"
     implementation "com.google.accompanist:accompanist-navigation-animation:$nav_anim_version"
 
+    implementation "com.himanshoe:kalendar:1.2.0"
+
 //    def calendar_version = "2.0.3"
 //    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$calendar_version"
 //    implementation "com.kizitonwose.calendar:compose:$calendar_version"

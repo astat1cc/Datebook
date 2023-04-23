@@ -55,7 +55,7 @@ fun DateView(modifier: Modifier = Modifier, name: String, time: String) {
                 )
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = time,
+                    text = time.substringAfterLast(" "), // takes only time
                     fontSize = 12.sp,
                     color = greenDark
                 )

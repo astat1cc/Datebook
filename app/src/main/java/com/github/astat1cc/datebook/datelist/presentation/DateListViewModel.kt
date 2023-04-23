@@ -15,6 +15,7 @@ import com.github.astat1cc.datebook.datelist.presentation.models.DateListItemUi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import java.util.*
 
 class DateListViewModel(
@@ -32,9 +33,15 @@ class DateListViewModel(
         MutableStateFlow(dateFormatUtil.getDateFrom(System.currentTimeMillis()))
     val currentlyChosenDate: StateFlow<String> = _currentlyChosenDate.asStateFlow()
 
-    val currentlyChosenDateInMillis: StateFlow<Long> = _currentlyChosenDate.map { dateString ->
-        dateFormatUtil.getTimestampInMillisFrom(dateString)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, System.currentTimeMillis())
+    val currentlyChosenDateInMillis: StateFlow<Long> =
+        _currentlyChosenDate.map { dateString -> // todo
+            dateFormatUtil.getTimestampInMillisFrom(dateString)
+        }.stateIn(viewModelScope, SharingStarted.Lazily, System.currentTimeMillis())
+
+    val currentlyChosenDateInLocalDate: StateFlow<LocalDate?> =
+        _currentlyChosenDate.map { dateString ->
+            dateFormatUtil.getLocalDateFrom(dateString)
+        }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val _newDateTitle = MutableStateFlow<String?>(null)
     val newDateTitle: StateFlow<String?> = _newDateTitle.asStateFlow()
@@ -93,8 +100,12 @@ class DateListViewModel(
             }
         }
 
-    fun dateChanged(year: Int, month: Int, day: Int) {
+    fun dateChanged(year: Int, month: Int, day: Int) { // todo
         _currentlyChosenDate.value = dateFormatUtil.getDateFrom(year, month, day)
+    }
+
+    fun dateChanged(date: LocalDate) {
+        _currentlyChosenDate.value = dateFormatUtil.getDateFrom(date)
     }
 
     fun createDate() {
