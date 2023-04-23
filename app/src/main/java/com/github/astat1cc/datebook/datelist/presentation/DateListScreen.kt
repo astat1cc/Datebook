@@ -1,22 +1,24 @@
 package com.github.astat1cc.datebook.datelist.presentation
 
 import android.app.TimePickerDialog
-import android.util.Log
-import android.widget.CalendarView
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,13 +28,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavHostController
 import com.github.astat1cc.datebook.R
 import com.github.astat1cc.datebook.core.models.ui.UiState
+import com.github.astat1cc.datebook.core.ui.colors.dateListScreenBackground
 import com.github.astat1cc.datebook.core.ui.colors.green
 import com.github.astat1cc.datebook.core.ui.colors.greenDark
-import com.github.astat1cc.datebook.core.ui.colors.greenLight
+import com.github.astat1cc.datebook.core.ui.colors.purple
 import com.github.astat1cc.datebook.datelist.presentation.views.DateCreatingSheet
 import com.github.astat1cc.datebook.datelist.presentation.views.DateView
 import com.github.astat1cc.datebook.datelist.presentation.views.HourIntervalView
@@ -40,19 +41,13 @@ import com.github.astat1cc.datebook.datelist.presentation.views.HourView
 import com.himanshoe.kalendar.Kalendar
 import com.himanshoe.kalendar.color.KalendarThemeColor
 import com.himanshoe.kalendar.component.day.config.KalendarDayColors
-import com.himanshoe.kalendar.component.header.config.KalendarHeaderConfig
-import com.himanshoe.kalendar.component.text.config.KalendarTextColor
-import com.himanshoe.kalendar.component.text.config.KalendarTextConfig
-import com.himanshoe.kalendar.component.text.config.KalendarTextSize
-import com.himanshoe.kalendar.model.KalendarType
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun DateListScreen(
-    navController: NavHostController,
+    onNavigateToDateDetails: (Int) -> Unit,
     viewModel: DateListViewModel = getViewModel()
 ) {
 
@@ -74,7 +69,7 @@ fun DateListScreen(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
         skipHalfExpanded = true,
-        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+        animationSpec = tween(durationMillis = 450, easing = FastOutSlowInEasing)
     )
     val timePickerDialog = TimePickerDialog(
         context,
@@ -86,14 +81,7 @@ fun DateListScreen(
         true
     )
 
-
-//    LaunchedEffect(key1 = showDateCreatingSheet.value) {
-//        if (showDateCreatingSheet.value) {
-//            launch {
-//                modalSheetState.show()
-//            }
-//        }
-//    }
+    val interactionSource = remember { MutableInteractionSource() }
 
     if (showNewDateTimePicker.value) {
         timePickerDialog.show()
@@ -139,7 +127,11 @@ fun DateListScreen(
             )
         }
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(dateListScreenBackground)
+        ) {
             Kalendar(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -152,7 +144,7 @@ fun DateListScreen(
                     selectedTextColor = Color.White
                 ),
                 kalendarThemeColor = KalendarThemeColor(
-                    backgroundColor = greenLight,
+                    backgroundColor = Color.White,
                     dayBackgroundColor = greenDark,
                     headerTextColor = greenDark
                 )
@@ -187,7 +179,9 @@ fun DateListScreen(
                         is UiState.Loading -> {
                             item {
                                 Box(
-                                    modifier = Modifier.fillMaxSize(),
+                                    modifier = Modifier
+                                        .padding(top = 40.dp)
+                                        .fillMaxSize(),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     CircularProgressIndicator(color = Color.White)
@@ -223,7 +217,13 @@ fun DateListScreen(
                                         // date
                                         DateView(
                                             modifier = Modifier
-                                                .padding(start = 24.dp),
+                                                .padding(start = 24.dp)
+                                                .clickable(
+                                                    interactionSource = interactionSource,
+                                                    indication = null
+                                                ) {
+                                                    onNavigateToDateDetails(date.id)
+                                                },
                                             name = date.name,
                                             time = date.dateStart
                                         )

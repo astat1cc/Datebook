@@ -24,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.astat1cc.datebook.R
+import com.github.astat1cc.datebook.core.ui.colors.dateCreatingSheetBackground
+import com.github.astat1cc.datebook.core.ui.colors.green
 import com.github.astat1cc.datebook.core.ui.colors.greenDark
 import com.github.astat1cc.datebook.core.ui.colors.greenLight
 
@@ -57,13 +59,14 @@ fun DateCreatingSheet(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
+            .background(dateCreatingSheetBackground)
             .padding(horizontal = 20.dp)
     ) {
         // Create Date text
         item {
             Text(
                 modifier = Modifier
-                    .padding(top = 12.dp)
+                    .padding(top = 20.dp)
                     .fillMaxWidth(),
                 text = stringResource(R.string.create_date),
                 fontWeight = FontWeight.Bold,

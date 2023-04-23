@@ -24,8 +24,8 @@ data class DateItemUi(
         fun fromDomain(dateDomain: DateItem, dateFormatUtil: DateFormatUtil) = with(dateDomain) {
             DateItemUi(
                 id,
-                dateFormatUtil.getDateFrom(dateStart),
-                dateFinish?.let { dateFormatUtil.getDateFrom(dateFinish) },
+                dateFormatUtil.getDateWithTimeFrom(dateStart),
+                dateFinish?.let { dateFormatUtil.getDateWithTimeFrom(dateFinish) },
                 name,
                 description
             )

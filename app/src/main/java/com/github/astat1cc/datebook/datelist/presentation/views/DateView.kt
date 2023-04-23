@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.astat1cc.datebook.core.ui.colors.green
 import com.github.astat1cc.datebook.core.ui.colors.greenDark
+import com.github.astat1cc.datebook.core.ui.colors.greenLight
 
 @Composable
 fun DateView(modifier: Modifier = Modifier, name: String, time: String) {
@@ -35,7 +36,7 @@ fun DateView(modifier: Modifier = Modifier, name: String, time: String) {
             modifier = Modifier
                 .padding(start = 8.dp)
                 .fillMaxWidth()
-                .background(Color.White)
+                .background(greenLight)
                 .padding(vertical = 16.dp, horizontal = 8.dp)
         ) {
             Text(

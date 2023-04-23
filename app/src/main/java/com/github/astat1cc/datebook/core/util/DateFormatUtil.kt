@@ -1,5 +1,6 @@
 package com.github.astat1cc.datebook.core.util
 
+import android.util.Log
 import kotlinx.datetime.LocalDate
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -28,6 +29,8 @@ interface DateFormatUtil {
     fun getDateFrom(kalendarDate: LocalDate): String
 
     fun getLocalDateFrom(dateString: String): LocalDate
+
+    fun getHourAndMinutesPairFrom(dateString: String): Pair<Int, Int>
 
     class Impl : DateFormatUtil {
 
@@ -74,8 +77,22 @@ interface DateFormatUtil {
             chosenDateInMillis + DAY_IN_MILLIS
 
         override fun getLocalDateFrom(dateString: String): LocalDate {
-            val (day, month, year) = dateString.split(".").map { it.toInt()}
+            val (day, month, year) = dateString.split(".").map { numString ->
+                tryToConvertToInt(numString)
+            }
             return LocalDate(year, month, day)
+        }
+
+        override fun getHourAndMinutesPairFrom(dateString: String): Pair<Int, Int> {
+            val (hour, minutes) = dateString.substringAfterLast(" ").split(":")
+                .map { numString -> tryToConvertToInt(numString) }
+            return hour to minutes
+        }
+
+        private fun tryToConvertToInt(numString: String) = try {
+            numString.toInt()
+        } catch (e: Exception) {
+            0
         }
 
         companion object {
