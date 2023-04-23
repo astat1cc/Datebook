@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.github.astat1cc.datebook.core.models.domain.DateItem
-import com.github.astat1cc.datebook.core.util.DateFormatUtil
 import com.github.astat1cc.datebook.datelist.domain.models.DateListItemDomain
 
 @Entity(tableName = DateItemDb.TABLE_NAME)

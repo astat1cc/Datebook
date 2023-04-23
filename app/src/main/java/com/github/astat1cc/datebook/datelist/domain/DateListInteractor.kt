@@ -1,6 +1,5 @@
 package com.github.astat1cc.datebook.datelist.domain
 
-import android.util.Log
 import com.github.astat1cc.datebook.core.models.domain.DateItem
 import com.github.astat1cc.datebook.core.models.domain.FetchResult
 import com.github.astat1cc.datebook.core.util.AppErrorHandler

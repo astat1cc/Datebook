@@ -6,7 +6,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,17 +14,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.github.astat1cc.datebook.R
@@ -33,7 +31,6 @@ import com.github.astat1cc.datebook.core.models.ui.UiState
 import com.github.astat1cc.datebook.core.ui.colors.dateListScreenBackground
 import com.github.astat1cc.datebook.core.ui.colors.green
 import com.github.astat1cc.datebook.core.ui.colors.greenDark
-import com.github.astat1cc.datebook.core.ui.colors.purple
 import com.github.astat1cc.datebook.datelist.presentation.views.DateCreatingSheet
 import com.github.astat1cc.datebook.datelist.presentation.views.DateView
 import com.github.astat1cc.datebook.datelist.presentation.views.HourIntervalView
@@ -44,7 +41,9 @@ import com.himanshoe.kalendar.component.day.config.KalendarDayColors
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun DateListScreen(
     onNavigateToDateDetails: (Int) -> Unit,
@@ -53,7 +52,6 @@ fun DateListScreen(
 
     val dateMapState = viewModel.dateMap.collectAsState()
     val currentlyChosenDateState = viewModel.currentlyChosenDate.collectAsState()
-    val currentlyChosenDateInMillisState = viewModel.currentlyChosenDateInMillis.collectAsState()
     val currentlyChosenDateInLocalDate = viewModel.currentlyChosenDateInLocalDate.collectAsState()
     val newDateTitleState = viewModel.newDateTitle.collectAsState()
     val newDateDescriptionState = viewModel.newDateDescription.collectAsState()
@@ -88,8 +86,19 @@ fun DateListScreen(
         viewModel.timePickerIsShown()
     }
 
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     BackHandler(modalSheetState.isVisible) {
         coroutineScope.launch { modalSheetState.hide() }
+    }
+
+    // For hiding the keyboard & removing the Focus on hiding the sheet.
+    LaunchedEffect(key1 = modalSheetState.currentValue) {
+        if (modalSheetState.currentValue == ModalBottomSheetValue.Hidden) {
+            keyboardController?.hide()
+            focusManager.clearFocus()
+        }
     }
 
     ModalBottomSheetLayout(
@@ -154,26 +163,6 @@ fun DateListScreen(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-//                item {
-
-//                    AndroidView(
-//                        modifier = Modifier
-////                            .padding(horizontal = 20.dp)
-//                            .fillMaxWidth()
-////                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
-//                            .clip(RoundedCornerShape(16.dp))
-//                            .background(Color.White),
-//                        factory = {
-//                            CalendarView(it)
-//                        },
-//                        update = { calendarView ->
-//                            calendarView.date = currentlyChosenDateInMillisState.value
-//                            calendarView.setOnDateChangeListener { _, year, month, day ->
-//                                viewModel.dateChanged(year, month, day)
-//                            }
-//                        }
-//                    )
-//                }
                     item { Spacer(modifier = Modifier.height(32.dp)) }
                     when (dateMap) {
                         is UiState.Loading -> {

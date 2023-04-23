@@ -1,6 +1,5 @@
 package com.github.astat1cc.datebook.core.util
 
-import android.util.Log
 import kotlinx.datetime.LocalDate
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -11,8 +10,6 @@ interface DateFormatUtil {
     fun getOnlyDateFrom(fullDate: String): String
 
     fun getOnlyHourFrom(timestampMillis: Long): String
-
-    fun getDateFrom(year: Int, month: Int, day: Int): String // todo
 
     fun getDateWithTimeFrom(timestampMillis: Long): String
 
@@ -41,9 +38,6 @@ interface DateFormatUtil {
             val formatter: DateFormat = SimpleDateFormat("HH", Locale.getDefault())
             return formatter.format(Date(timestampMillis))
         }
-
-        override fun getDateFrom(year: Int, month: Int, day: Int) =
-            "${if (day < 10) "0" else ""}$day.${if (month < 10) "0" else ""}${month + 1}.$year" // month + 1 because months start from 0
 
         override fun getTimeFrom(hour: Int, minutes: Int) =
             "${if (hour < 10) "0" else ""}$hour:${if (minutes < 10) "0" else ""}$minutes"

@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -25,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.astat1cc.datebook.R
 import com.github.astat1cc.datebook.core.ui.colors.dateCreatingSheetBackground
-import com.github.astat1cc.datebook.core.ui.colors.green
 import com.github.astat1cc.datebook.core.ui.colors.greenDark
 import com.github.astat1cc.datebook.core.ui.colors.greenLight
 
@@ -53,8 +51,6 @@ fun DateCreatingSheet(
         .fillMaxWidth()
 //        .border(width = 1.dp, color = greenDark, shape = RoundedCornerShape(12.dp))
         .clip(RoundedCornerShape(12.dp))
-
-    val focusManager = LocalFocusManager.current
 
     LazyColumn(
         modifier = Modifier
@@ -174,7 +170,6 @@ fun DateCreatingSheet(
                     .padding(vertical = 32.dp)
                     .fillMaxWidth(),
                 onClick = {
-                    focusManager.clearFocus()
                     doneButtonClickListener()
                 },
                 shape = RoundedCornerShape(12.dp),

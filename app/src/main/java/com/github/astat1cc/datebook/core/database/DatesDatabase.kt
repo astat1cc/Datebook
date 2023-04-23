@@ -2,9 +2,9 @@ package com.github.astat1cc.datebook.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.github.astat1cc.datebook.datelist.data.local.dao.DateListDao
 import com.github.astat1cc.datebook.core.database.model.DateItemDb
 import com.github.astat1cc.datebook.datedetails.data.local.DateDetailsDao
+import com.github.astat1cc.datebook.datelist.data.local.dao.DateListDao
 
 @Database(
     entities = [DateItemDb::class],

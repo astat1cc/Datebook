@@ -33,7 +33,7 @@ class DateListViewModel(
         MutableStateFlow(dateFormatUtil.getDateFrom(System.currentTimeMillis()))
     val currentlyChosenDate: StateFlow<String> = _currentlyChosenDate.asStateFlow()
 
-    val currentlyChosenDateInMillis: StateFlow<Long> =
+    private val currentlyChosenDateInMillis: StateFlow<Long> =
         _currentlyChosenDate.map { dateString -> // todo
             dateFormatUtil.getTimestampInMillisFrom(dateString)
         }.stateIn(viewModelScope, SharingStarted.Lazily, System.currentTimeMillis())
@@ -99,10 +99,6 @@ class DateListViewModel(
                 )
             }
         }
-
-    fun dateChanged(year: Int, month: Int, day: Int) { // todo
-        _currentlyChosenDate.value = dateFormatUtil.getDateFrom(year, month, day)
-    }
 
     fun dateChanged(date: LocalDate) {
         _currentlyChosenDate.value = dateFormatUtil.getDateFrom(date)
