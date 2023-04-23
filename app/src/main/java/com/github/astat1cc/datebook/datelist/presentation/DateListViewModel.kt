@@ -147,6 +147,12 @@ class DateListViewModel(
     private fun getDefaultTimeForTimePicker() =
         appResourceProvider.getString(R.string.default_time)
 
+    fun canSave() =
+        !(_newDateTitle.value.isNullOrEmpty() || _newDateDescription.value.isNullOrEmpty())
+
+    fun getBlankLineToastMessage() =
+        appResourceProvider.getString(R.string.lines_should_not_be_blank)
+
     companion object {
 
         val hourList = listOf(

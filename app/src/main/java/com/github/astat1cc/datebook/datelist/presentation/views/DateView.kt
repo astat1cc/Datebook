@@ -19,12 +19,11 @@ import com.github.astat1cc.datebook.core.ui.colors.greenDark
 
 @Composable
 fun DateView(modifier: Modifier = Modifier, name: String, time: String) {
-    Row(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.White)
     ) {
         Box(
             Modifier
@@ -34,8 +33,10 @@ fun DateView(modifier: Modifier = Modifier, name: String, time: String) {
         )
         Column(
             modifier = Modifier
+                .padding(start = 8.dp)
                 .fillMaxWidth()
-                .padding(8.dp)
+                .background(Color.White)
+                .padding(vertical = 16.dp, horizontal = 8.dp)
         ) {
             Text(
                 text = name,

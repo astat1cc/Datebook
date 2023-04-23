@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -49,6 +51,9 @@ fun DateCreatingSheet(
         .fillMaxWidth()
 //        .border(width = 1.dp, color = greenDark, shape = RoundedCornerShape(12.dp))
         .clip(RoundedCornerShape(12.dp))
+
+    val focusManager = LocalFocusManager.current
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -165,7 +170,10 @@ fun DateCreatingSheet(
                 modifier = Modifier
                     .padding(vertical = 32.dp)
                     .fillMaxWidth(),
-                onClick = { doneButtonClickListener() },
+                onClick = {
+                    focusManager.clearFocus()
+                    doneButtonClickListener()
+                },
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = greenDark

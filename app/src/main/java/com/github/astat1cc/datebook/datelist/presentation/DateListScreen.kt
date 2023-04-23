@@ -2,6 +2,7 @@ package com.github.astat1cc.datebook.datelist.presentation
 
 import android.app.TimePickerDialog
 import android.widget.CalendarView
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -18,20 +19,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
+import com.github.astat1cc.datebook.R
 import com.github.astat1cc.datebook.core.models.ui.UiState
-import com.github.astat1cc.datebook.core.ui.colors.greenDark
 import com.github.astat1cc.datebook.core.ui.colors.green
+import com.github.astat1cc.datebook.core.ui.colors.greenDark
 import com.github.astat1cc.datebook.datelist.presentation.views.DateCreatingSheet
 import com.github.astat1cc.datebook.datelist.presentation.views.DateView
 import com.github.astat1cc.datebook.datelist.presentation.views.HourIntervalView
+import com.github.astat1cc.datebook.datelist.presentation.views.HourView
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -106,8 +109,16 @@ fun DateListScreen(
                 },
                 doneButtonClickListener = {
                     coroutineScope.launch {
-                        modalSheetState.hide()
-                        viewModel.createDate()
+                        if (viewModel.canSave()) {
+                            modalSheetState.hide()
+                            viewModel.createDate()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                viewModel.getBlankLineToastMessage(),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 },
                 onPickTimeClicked = {
@@ -124,9 +135,9 @@ fun DateListScreen(
                 item {
                     AndroidView(
                         modifier = Modifier
-                            .padding(top = 4.dp)
+//                            .padding(horizontal = 20.dp)
                             .fillMaxWidth()
-                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
+//                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
                             .clip(RoundedCornerShape(16.dp))
                             .background(Color.White),
                         factory = {
@@ -157,23 +168,35 @@ fun DateListScreen(
                         hourList.forEach { hour ->
                             item(
                                 key = hour
-                            ) { HourIntervalView(hour = hour) }
+                            ) {
+                                HourIntervalView(
+                                    modifier = Modifier.animateItemPlacement(),
+                                    hour = hour
+                                )
+                            }
                             items(
                                 items = dateMap.data[hour] ?: emptyList(),
                                 key = { date ->
                                     date.id
                                 }) { date ->
-                                // date
-                                DateView(
+                                Row(
                                     modifier = Modifier
                                         .padding(
                                             vertical = 12.dp,
                                             horizontal = 32.dp
                                         )
-                                        .animateItemPlacement(),
-                                    name = date.name,
-                                    time = date.dateStart
-                                )
+                                        .animateItemPlacement()
+                                ) {
+                                    // invisible view to align DateView below the line
+                                    HourView(modifier = Modifier.alpha(0f), hour = hour)
+                                    // date
+                                    DateView(
+                                        modifier = Modifier
+                                            .padding(start = 24.dp),
+                                        name = date.name,
+                                        time = date.dateStart
+                                    )
+                                }
                             }
                         }
                     }
@@ -193,7 +216,7 @@ fun DateListScreen(
                     }
                     .background(green)
                     .padding(16.dp),
-                painter = painterResource(id = com.github.astat1cc.datebook.R.drawable.ic_add),
+                painter = painterResource(id = R.drawable.ic_add),
                 contentDescription = null,
                 tint = greenDark
             )
