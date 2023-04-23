@@ -101,6 +101,14 @@ fun DateListScreen(
         }
     }
 
+    // for hiding the keyboard & removing the focus on hiding the sheet
+    LaunchedEffect(key1 = modalSheetState.currentValue) {
+        if (modalSheetState.currentValue == ModalBottomSheetValue.Hidden) {
+            keyboardController?.hide()
+            focusManager.clearFocus()
+        }
+    }
+
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
